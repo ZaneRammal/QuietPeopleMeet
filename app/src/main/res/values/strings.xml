@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">QuietPeopleMeet1</string>
+    <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">QuietPeopleMeet</string>
+    <string name="nav_header_subtitle">Version 0.01 Pre-Alpha</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Strings for left side navigation drawer, first group -->
+    <string name="drawer_main">Main Menu</string>
+    <string name="drawer_record">Sound Recorder</string>
+    <string name="drawer_send">Send</string>
+
+    <!-- Strings for left side navigation drawer, first group -->
+    <string name="drawer_group_name">Communicate</string>
+
 </resources>
