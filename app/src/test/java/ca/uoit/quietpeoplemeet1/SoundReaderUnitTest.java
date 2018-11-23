@@ -8,12 +8,4 @@ import static junit.framework.TestCase.assertTrue;
 public class SoundReaderUnitTest {
 
 
-    // get sound value
-    SoundReader sr = new SoundReader();
-
-
-    int value =1;
-    @Test
-    public void SoundNotZero(){assertTrue(value > 0);}
-
 }

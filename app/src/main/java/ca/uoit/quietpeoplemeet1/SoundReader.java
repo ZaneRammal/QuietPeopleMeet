@@ -2,45 +2,43 @@ package ca.uoit.quietpeoplemeet1;
 
 import android.media.MediaRecorder;
 
-import java.io.File;
-
 public class SoundReader {
 
-    MediaRecorder mr;
+    private MediaRecorder mic = null;
 
-    public SoundReader(){
-
-        mr = new  MediaRecorder();
-
+    public void start() throws Exception{
+        if (mic == null) {
+            mic = new MediaRecorder();
+            mic.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mic.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mic.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+            mic.setOutputFile("/dev/null");
+            mic.prepare();
+            mic.start();
+        }
     }
 
-    int getSoundLevel(){
-        int soundLevel = 0;
-
-        /**
-         * record some audio (5 seconds),
-         * read that audio file,
-         * read sound levels and take average of soundlevel/second
-         *
-         * return a value (in dB?) for what the sound level is
-         */
-
-
-
-        return soundLevel;
+    //stop the recording and release the resource
+    public void stop() {
+        if (mic != null) {
+            mic.stop();
+            mic.release();
+            mic = null;
+        }
     }
 
-    void recordSample(){
+    //get sound wave amplitude at any given time
+    public double getAmplitude() {
+        if (mic != null)
+            return  mic.getMaxAmplitude();
+        else
+            return -1;
 
     }
-
-    int readSoundLevel(File soundFile){
-       int soundLevel = 0;
-
-       return soundLevel;
-    }
-
-
-
 
 }
+
+
+
+
+
