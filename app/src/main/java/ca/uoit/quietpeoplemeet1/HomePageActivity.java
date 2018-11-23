@@ -1,8 +1,22 @@
 package ca.uoit.quietpeoplemeet1;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.icu.text.AlphabeticIndex;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,43 +26,147 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.Toast;
+import android.support.v4.app.FragmentActivity;
 
-public class HomePageActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.Map;
+
+public class HomePageActivity extends AppCompatActivity implements RecordFragment.OnFragmentInteractionListener, StartFragment.OnFragmentInteractionListener {
+
+    private Toolbar toolbar;
+    public DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    public ListView drawerList;
+    public String[] layers;
+    private ActionBarDrawerToggle drawerToggle;
+    private Map map;
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
+        Fragment fragment = null;
+        Class fragmentClass = StartFragment.class;
 
-        /* The rigjt side bar */
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
+
+
+        /* Initialize toolbar, drawerlayout, and navigation view*/
+        toolbar = findViewById(R.id.toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.navigationView);
+
+
+        /* DrawerToggle is the three lines (hamburger) icon that you
+         *  can tap to open the navigation drawaer
+         * */
         setSupportActionBar(toolbar);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.drawer_open, R.string.drawer_close);
+
+        /* addDrawerListener was added in Api 24, but at the same time,
+         * setDrawerListener was deprecated
+         */
+        if (Build.VERSION.SDK_INT < 24) {
+            drawerLayout.setDrawerListener(drawerToggle);
+        } else {
+            drawerLayout.addDrawerListener(drawerToggle);
+        }
+
+        setupDrawerContent(navigationView);
+
+    }
 
 
 
-        /* The left side bar */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+    @Override
+    public void onFragmentInteraction (Uri uri) {
 
 
-        /* keep commented out for now
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
+    }
+    private void setupDrawerContent(NavigationView navigationView) {
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+
+
+
+    public void selectDrawerItem(MenuItem menuItem) {
+        Fragment fragment = null;
+        Class fragmentClass = StartFragment.class;
+        switch(menuItem.getItemId()) {
+            case R.id.nav_main:
+                fragmentClass = StartFragment.class;
+                break;
+            case R.id.nav_sound:
+                fragmentClass = RecordFragment.class;
+                break;
+            case R.id.nav_send:
+               // fragmentClass = ThirdFragment.class;
+                break;
+            default:
+               // fragmentClass = FirstFragment.class;
+        }
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
+
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        drawerLayout.closeDrawers();
+    }
+
+
+
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+
+    }
+
+
+    /* Methods*/
+
+    private void displayMessage(String message) {
+
+        Context context = getApplicationContext();
+        CharSequence text = message;
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+
     }
 
     @Override
@@ -85,29 +203,88 @@ public class HomePageActivity extends AppCompatActivity
 
 
     /**
-     * This is where responses to buttons from the left side menu will be coded.
-     * @param item
+     * Required because our application supports Android all the way down to Api Level 21. There was a change in
+     * how permissions where granted and verified. So it is important to place all permission checking code in its own method to
+     * avoid cluttering onCreate
+     *
+     * @param activity
      * @return
      */
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    public void checkPermissions(Activity activity) {
+        PackageManager packMan = activity.getPackageManager();
+        int hasWritePermission = packMan.checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, activity.getPackageName());
+        int hasRecordPermission = packMan.checkPermission(Manifest.permission.RECORD_AUDIO, activity.getPackageName());
 
-        if (id == R.id.nav_main) {
-            // Handle the camera action
-        }  else if (id == R.id.nav_sound) {
 
-            // Call sound intent
+        /* If the API is lower than 23, we cannot use runtime permission statements, so we must check to see if permission has been granted. */
+        if (Build.VERSION.SDK_INT < 23) {
 
-        } else if (id == R.id.nav_send) {
+            switch (hasWritePermission) {
 
-            // TODO
-        }
+                case ((PackageManager.PERMISSION_GRANTED)): {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Write permission is granted.";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+                }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+                case ((PackageManager.PERMISSION_DENIED)): {
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Write permission is denied. Application will not function correctly.";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+                }
+
+                default:
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Default statement reached. Application may not function correctly.";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+            }
+
+            switch (hasRecordPermission) {
+
+                case ((PackageManager.PERMISSION_GRANTED)): {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Record permission is granted.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                    break;
+                }
+                case ((PackageManager.PERMISSION_DENIED)): {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Record permission is denied. Application will not function correctly.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+                }
+                default:
+                    // warn that default statement reached
+                    break;
+            }
+
+        } /* If the API is lower than 23, we cannot use runtime permission statements, so we must check to see if permission has been granted. */
+
+        /* If the API is  greater than 22, we can use runtime permission statements. */
+        else {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 1000);
+
+        } /* If the API is  greater than 22, we can use runtime permission statements. */
+
     }
+
 }
