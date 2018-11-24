@@ -76,6 +76,8 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
                 R.string.drawer_open, R.string.drawer_close);
         setupDrawerContent(navigationView);
 
+        LocationFinder lf = new LocationFinder(this);
+
     }
 
 

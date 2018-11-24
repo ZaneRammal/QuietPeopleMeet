@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -21,6 +22,7 @@ public class LocationFinder implements LocationListener {
     private double longitude;
     private Criteria criteria;
     private String provider;
+    private Context context;
 
 
     @Override
@@ -47,6 +49,10 @@ public class LocationFinder implements LocationListener {
     public void onLocationChanged(Location location) {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
+
+        String s = "Long : " + Double.toString(this.getLongitude()) + " Lat: " + Double.toString(this.getLongitude());
+        Toast toast = Toast.makeText(this.context, s, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     /**
@@ -56,6 +62,7 @@ public class LocationFinder implements LocationListener {
      * @param context the context of the calling activity
      */
     public LocationFinder(Context context) {
+        this.context = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
@@ -89,6 +96,9 @@ public class LocationFinder implements LocationListener {
 
         Location l = null;
 
+
+
+
         l.setLongitude(this.longitude);
         l.setLatitude(this.latitude);
 
@@ -96,5 +106,11 @@ public class LocationFinder implements LocationListener {
 
     }
 
+    public double getLongitude() {
+        return longitude;
+    }
 
+    public double getLatitude() {
+        return latitude;
+    }
 }
