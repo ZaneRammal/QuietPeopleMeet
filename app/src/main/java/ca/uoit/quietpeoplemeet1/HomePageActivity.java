@@ -37,69 +37,62 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
     private Toolbar toolbar;
     public DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    public ListView drawerList;
-    public String[] layers;
+
+    /* This is the button that opens the Navigation Drawer when tapped*/
+
     private ActionBarDrawerToggle drawerToggle;
-    private Map map;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        Fragment fragment = null;
-        Class fragmentClass = StartFragment.class;
+        checkPermissions(this);
 
+        /* Initialize variables*/
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
-
-
-        /* Initialize toolbar, drawerlayout, and navigation view*/
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
 
+        /* This is launching the StartFragment when the activity is created. */
 
-        /* DrawerToggle is the three lines (hamburger) icon that you
-         *  can tap to open the navigation drawaer
-         * */
+        Fragment fragment = null;
+        Class fragmentClass = StartFragment.class;
+
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        /* Removes any fragment that may be loaded already, then loads the StartFragment*/
+
+        if (fragment != null) {
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
+        } else {
+
+        }
+
+
+        /* Configure the Navigation Drawer*/
+
         setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close);
-
-        /* addDrawerListener was added in Api 24, but at the same time,
-         * setDrawerListener was deprecated
-         */
-        if (Build.VERSION.SDK_INT < 24) {
-            drawerLayout.setDrawerListener(drawerToggle);
-        } else {
-            drawerLayout.addDrawerListener(drawerToggle);
-        }
-
         setupDrawerContent(navigationView);
 
     }
 
-
-
-
     @Override
-    public void onFragmentInteraction (Uri uri) {
+    public void onFragmentInteraction(Uri uri) {
 
 
     }
+
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -111,12 +104,10 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
                 });
     }
 
-
-
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
         Class fragmentClass = StartFragment.class;
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.nav_main:
                 fragmentClass = StartFragment.class;
                 break;
@@ -124,10 +115,11 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
                 fragmentClass = RecordFragment.class;
                 break;
             case R.id.nav_send:
-               // fragmentClass = ThirdFragment.class;
+                // TODO
                 break;
             default:
-               // fragmentClass = FirstFragment.class;
+                fragmentClass = StartFragment.class;
+                break;
         }
 
         try {
@@ -136,17 +128,14 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
+        /* Removes any fragment that may be loaded already, then loads appropriate fragment */
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frameLayout, fragment).commit();
-
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         drawerLayout.closeDrawers();
     }
-
-
-
 
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
@@ -155,19 +144,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
 
     }
 
-
     /* Methods*/
-
-    private void displayMessage(String message) {
-
-        Context context = getApplicationContext();
-        CharSequence text = message;
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
-
-
-    }
 
     @Override
     public void onBackPressed() {
@@ -181,19 +158,13 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_page, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
