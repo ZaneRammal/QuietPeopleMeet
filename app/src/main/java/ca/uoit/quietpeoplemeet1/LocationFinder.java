@@ -25,8 +25,36 @@ public class LocationFinder implements LocationListener {
     private Context context;
 
 
+
+    /**
+     * Constructor for LocationFinder
+     * sets up locationManager and if permission for location is approved then it sets the newest location
+     *
+     * @param context the context of the calling activity
+     */
+    public LocationFinder(Context context) {
+        this.context = context;
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        provider = locationManager.getBestProvider(criteria, true);
+
+        //if permission is granted
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // set method for location acquisition
+
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
+        }
+
+
+    }
+
+
+
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+        this.provider = provider;
 
     }
 
@@ -50,33 +78,11 @@ public class LocationFinder implements LocationListener {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
 
-        String s = "Long : " + Double.toString(this.getLongitude()) + " Lat: " + Double.toString(this.getLongitude());
-        Toast toast = Toast.makeText(this.context, s, Toast.LENGTH_LONG);
+        String s =  " Lat: " + Double.toString(latitude) + " Long : " + Double.toString(longitude);
+        Toast toast = Toast.makeText(this.context, s, Toast.LENGTH_SHORT);
         toast.show();
     }
 
-    /**
-     * Constructor for LocationFinder
-     * sets up locationManager and if permission for location is approved then it sets the newest location
-     *
-     * @param context the context of the calling activity
-     */
-    public LocationFinder(Context context) {
-        this.context = context;
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        provider = locationManager.getBestProvider(criteria, true);
-
-        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1,
-                    0, this);
-            setMostRecentLocation(locationManager.getLastKnownLocation(provider));
-
-        }
-
-
-    }
 
     /**
      * sets newest location value
