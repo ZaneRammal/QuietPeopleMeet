@@ -228,11 +228,15 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
         PackageManager packMan = activity.getPackageManager();
         int hasWritePermission = packMan.checkPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, activity.getPackageName());
         int hasRecordPermission = packMan.checkPermission(Manifest.permission.RECORD_AUDIO, activity.getPackageName());
+        int hasFineLocationPermission = packMan.checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, activity.getPackageName());
+        int hasCoarseLocationPermission = packMan.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, activity.getPackageName());
 
         /* If the API is  greater than 22, we can use runtime permission statements. */
         if (Build.VERSION.SDK_INT >=23) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 1000);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1000);
 
         } /* If the API is  greater than 22, we can use runtime permission statements. */
 
@@ -295,6 +299,60 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
                     // warn that default statement reached
                     break;
             }
+
+            switch (hasFineLocationPermission) {
+
+                case ((PackageManager.PERMISSION_GRANTED)): {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Fine Location permission is granted.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                    break;
+                }
+                case ((PackageManager.PERMISSION_DENIED)): {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Fine Location permission is denied. Application will not function correctly.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+                }
+                default:
+                    // warn that default statement reached
+                    break;
+            }
+
+            switch (hasCoarseLocationPermission) {
+
+                case ((PackageManager.PERMISSION_GRANTED)): {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Coarse Location permission is granted.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+
+                    break;
+                }
+                case ((PackageManager.PERMISSION_DENIED)): {
+                    Context context = getApplicationContext();
+                    CharSequence text = "Coarse Location permission is denied. Application will not function correctly.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                    break;
+                }
+                default:
+                    // warn that default statement reached
+                    break;
+            }
+
+
 
         } /* If the API is lower than 23, we cannot use runtime permission statements, so we must check to see if permission has been granted. */
 
