@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecordFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/textAmp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Record Fragment" />
+
+
+
+    <!-- Clicking this button will start recording audio -->
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal"
+        android:text="@string/button_record"
+        android:onClick="onButtonClick1"
+        />
+
+    <!-- Clicking this button will stop recording audio -->
+    <Button
+        android:id="@+id/stopButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_horizontal|center_vertical"
+        android:onClick="onButtonClick2"
+        android:text="@string/button_stop" />
+
+    <!-- Clicking this button will return the amplitiude of the audio-->
+    <Button
+        android:id="@+id/getAmpButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_horizontal|center_vertical"
+        android:onClick="onButtonClick3"
+        android:text="@string/button_amp" />
+
+</FrameLayout>
