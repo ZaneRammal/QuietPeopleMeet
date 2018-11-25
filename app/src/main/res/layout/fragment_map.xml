@@ -7,8 +7,42 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="This is the map fragment, where the map will go." />
+        android:id="@+id/longitudeBox"
+        android:layout_width="125dp"
+        android:layout_height="88dp"
+        android:layout_gravity="top|left"
+        android:text="Longtiude" />
+
+    <TextView
+        android:id="@+id/latitudeBox"
+        android:layout_width="129dp"
+        android:layout_height="87dp"
+        android:layout_gravity="top|center_horizontal"
+        android:text="Latitude" />
+
+    <Button
+        android:id="@+id/latitudeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|center_vertical"
+        android:text="Get Latitude"
+        android:onClick="onButtonClick4"/>
+
+    <Button
+        android:id="@+id/longitudeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:text="Get Longitude"
+        android:onClick="onButtonClick5"
+        />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:text="Button" />
+
 
 </FrameLayout>

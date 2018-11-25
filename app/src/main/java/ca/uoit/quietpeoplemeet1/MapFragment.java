@@ -1,12 +1,15 @@
 package ca.uoit.quietpeoplemeet1;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -18,6 +21,14 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class MapFragment extends Fragment {
+
+    Location location;
+    LocationFinder locationFinder;
+    Context context;
+    Double localLongitude;
+    Double localLatitude;
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -54,11 +65,76 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        /* Instantiate variables*/
+
+        context = getActivity().getApplicationContext();
+        locationFinder = new LocationFinder(context);
+        localLatitude = 0.0;
+        localLongitude = 0.0;
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
+
+    // Get Latitude
+    public void onButtonClick4(View v) {
+
+        try {
+            localLatitude = locationFinder.getLatitude();
+
+
+            String strLatitude = Double.toString(localLatitude);
+
+            String latitudeText = "Latitude: ";
+
+
+            latitudeText = latitudeText.concat(strLatitude);
+
+
+            TextView latitudeView = (TextView) getView().findViewById(R.id.latitudeBox);
+            latitudeView.setText(latitudeText);
+
+
+            //   Toast.makeText(getActivity(), "Recording Started", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /* Get longitude*/
+
+    public void onButtonClick5(View v) {
+
+        try {
+
+            localLongitude = locationFinder.getLongitude();
+
+
+            String strLongitude = Double.toString(localLongitude);
+
+            String longitudeText = "Longitude: ";
+
+
+            longitudeText = longitudeText.concat(strLongitude);
+
+
+            TextView longitudeView = (TextView) getView().findViewById(R.id.longitudeBox);
+            longitudeView.setText(longitudeText);
+
+
+            //  Toast.makeText(getActivity(), "Recording Started", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

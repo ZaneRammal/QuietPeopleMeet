@@ -25,7 +25,6 @@ public class LocationFinder implements LocationListener {
     private Context context;
 
 
-
     /**
      * Constructor for LocationFinder
      * sets up locationManager and if permission for location is approved then it sets the newest location
@@ -49,7 +48,6 @@ public class LocationFinder implements LocationListener {
 
 
     }
-
 
 
     @Override
@@ -78,7 +76,7 @@ public class LocationFinder implements LocationListener {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
 
-        String s =  " Lat: " + Double.toString(latitude) + " Long : " + Double.toString(longitude);
+        String s = " Lat: " + Double.toString(latitude) + " Long : " + Double.toString(longitude);
         Toast toast = Toast.makeText(this.context, s, Toast.LENGTH_SHORT);
         toast.show();
     }
@@ -86,9 +84,11 @@ public class LocationFinder implements LocationListener {
 
     /**
      * sets newest location value
+     *
      * @param location newest location to be set to
      */
     public void setMostRecentLocation(Location location) {
+
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
     }
@@ -96,27 +96,25 @@ public class LocationFinder implements LocationListener {
 
     /**
      * gets current location
+     *
      * @return Location object of current location
      */
     public Location getLocation() {
 
         Location l = null;
-
-
-
-
         l.setLongitude(this.longitude);
         l.setLatitude(this.latitude);
 
         return l;
-
     }
 
     public double getLongitude() {
+
         return longitude;
     }
 
     public double getLatitude() {
+
         return latitude;
     }
 }

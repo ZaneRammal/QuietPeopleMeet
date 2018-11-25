@@ -73,14 +73,10 @@ public class RecordFragment extends Fragment {
 
         soundReader = new SoundReader();
 
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
     }
 
     // Start Recording Button
@@ -94,7 +90,7 @@ public class RecordFragment extends Fragment {
         }
 
     }
-    // Stop Recordding Button
+    // Stop Recording Button
     public void onButtonClick2(View v) {
 
         try {
@@ -106,7 +102,10 @@ public class RecordFragment extends Fragment {
 
     }
 
-    // Show Results Button
+    /* Show Results Button
+    *
+    *  Displays amplitude
+    * */
     public void onButtonClick3(View v) {
 
         String ampMessage = Double.toString(soundReader.getAmplitude());

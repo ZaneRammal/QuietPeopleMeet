@@ -25,10 +25,13 @@ import java.util.Map;
 
 public class HomePageActivity extends AppCompatActivity implements RecordFragment.OnFragmentInteractionListener, StartFragment.OnFragmentInteractionListener, MapFragment.OnFragmentInteractionListener {
 
+    /* Variables */
+
+    public LocationFinder locationFinder;
+    private ActionBarDrawerToggle drawerToggle;   /* This is the button that opens the Navigation Drawer when tapped */
     private Toolbar toolbar;
     public DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    public Class fragmentClass;
 
     /* Fragment objects. They are declared here, and instantiated in OnCreate so the class methods of
      * the fragments can be called from this activity.
@@ -37,11 +40,6 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
     RecordFragment recordFragment;
     MapFragment mapFragment;
     StartFragment startFragment;
-
-
-    /* This is the button that opens the Navigation Drawer when tapped */
-
-    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +59,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
-
+        locationFinder= new LocationFinder(this);
 
         /* This is launching the StartFragment when the activity is created. */
         /* Removes any fragment that may be loaded already, then loads the StartFragment*/
@@ -76,33 +74,52 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
                 R.string.drawer_open, R.string.drawer_close);
         setupDrawerContent(navigationView);
 
-        LocationFinder lf = new LocationFinder(this);
+
 
     }
-
-
 
     /* RecordFragment onclick handlers */
 
     public void onButtonClick1(View v) {
+
+        /* Starts recording audio*/
         recordFragment.onButtonClick1(v);
 
     }
 
-    /* */
     public void onButtonClick2(View v) {
+        /* Stops recording audio*/
         recordFragment.onButtonClick2(v);
 
     }
 
     public void onButtonClick3(View v) {
+        // Prints amplitude
         recordFragment.onButtonClick3(v);
 
     }
 
     /* MapFragment onclick handlers */
 
+
+    public void onButtonClick4(View v) {
+        // Prints Latitude
+       mapFragment.onButtonClick4(v);
+
+    }
+
+
+    public void onButtonClick5(View v) {
+        // Prints longitude
+        mapFragment.onButtonClick5(v);
+
+    }
+
+    public void onButtonClick6(View v) {
         // TODO
+       // mapFragment.onButtonClick6(v);
+
+    }
 
     /* StartFragment onclick handlers*/
 
