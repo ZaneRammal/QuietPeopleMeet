@@ -60,7 +60,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
         toolbar = findViewById(R.id.toolbar);
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigationView);
-        locationFinder= new LocationFinder(this);
+        locationFinder = new LocationFinder(this);
 
         /* This is launching the StartFragment when the activity is created. */
         /* Removes any fragment that may be loaded already, then loads the StartFragment*/
@@ -74,7 +74,6 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close);
         setupDrawerContent(navigationView);
-
 
 
     }
@@ -105,7 +104,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
 
     public void onButtonClick4(View v) {
         // Prints Latitude
-       mapFragment.onButtonClick4(v);
+        mapFragment.onButtonClick4(v);
 
     }
 
@@ -118,13 +117,13 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
 
     public void onButtonClick6(View v) {
         // TODO
-       // mapFragment.onButtonClick6(v);
+        // mapFragment.onButtonClick6(v);
 
     }
 
     /* StartFragment onclick handlers*/
 
-        // TODO
+    // TODO
 
 
     // -------------------------------
@@ -172,6 +171,11 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
             case R.id.nav_send:
                 // TODO
                 break;
+            case R.id.nav_latlong:
+                // TODO: Refactor MapFragment into something like latlongFragment
+                fragment = mapFragment;
+                break;
+
             case R.id.nav_map:
 
 
@@ -182,7 +186,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
 //                Intent intent = new Intent(this, MapActivity.class);
 //                startActivity(intent);
                 //
-                // fragment = mapFragment;
+                //
                 break;
             default:
                 fragment = startFragment;
@@ -262,7 +266,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
         int hasCoarseLocationPermission = packMan.checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION, activity.getPackageName());
 
         /* If the API is  greater than 22, we can use runtime permission statements. */
-        if (Build.VERSION.SDK_INT >=23) {
+        if (Build.VERSION.SDK_INT >= 23) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1000);
             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 1000);
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
@@ -383,13 +387,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
             }
 
 
-
         } /* If the API is lower than 23, we cannot use runtime permission statements, so we must check to see if permission has been granted. */
-
-
-
-
-
 
 
     }
