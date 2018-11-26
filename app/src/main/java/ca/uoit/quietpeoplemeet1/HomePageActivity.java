@@ -3,6 +3,7 @@ package ca.uoit.quietpeoplemeet1;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -160,6 +161,7 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
      * */
     public void selectDrawerItem(MenuItem menuItem) {
         Fragment fragment = null;
+        Intent intent;
         switch (menuItem.getItemId()) {
             case R.id.nav_main:
                 fragment = startFragment;
@@ -171,7 +173,16 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
                 // TODO
                 break;
             case R.id.nav_map:
-                fragment = mapFragment;
+
+
+                intent = new Intent(HomePageActivity.this, MapActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                HomePageActivity.this.startActivity(intent);
+
+//                Intent intent = new Intent(this, MapActivity.class);
+//                startActivity(intent);
+                //
+                // fragment = mapFragment;
                 break;
             default:
                 fragment = startFragment;
