@@ -21,9 +21,11 @@ public class MyWiFiActivity extends AppCompatActivity {
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
     BroadcastReceiver mReceiver;
+    String allPeers;
 
-    WifiP2pManager.PeerListListener myPeerListListener;
+    //WifiP2pManager.PeerListListener myPeerListListener;
 
+    TextView peerView;
 
     public static final String TAG = "DEVICE_FINDER_ACTIVITY";
 
@@ -31,9 +33,10 @@ public class MyWiFiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wifi);
-
+        allPeers = "Peers: ";
         //check permissions
 
+        peerView = (TextView) findViewById(R.id.peerView);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
@@ -122,9 +125,14 @@ public class MyWiFiActivity extends AppCompatActivity {
             public void onPeersAvailable(WifiP2pDeviceList wifiP2pDeviceList) {
 
                 for (WifiP2pDevice device : wifiP2pDeviceList.getDeviceList()) {
+
                     //Log what devices were found
                     Log.d(TAG, "found device : " + device.deviceName);
                     Toast.makeText(getApplicationContext(), "found device : " + device.deviceName, Toast.LENGTH_SHORT).show();
+                    allPeers = allPeers.concat(device.deviceName);
+                    allPeers = allPeers.concat(" | ");
+
+
 
                     /**
                      * OK here's my idea:
@@ -142,6 +150,7 @@ public class MyWiFiActivity extends AppCompatActivity {
 
 
                 }
+                peerView.setText(allPeers);
             }
         });
     }
@@ -153,12 +162,12 @@ public class MyWiFiActivity extends AppCompatActivity {
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Toast.makeText(getApplicationContext(), "DISCOVER PEERS SUCCESS", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "DISCOVER PEERS SUCCESS", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int reasonCode) {
-                Toast.makeText(getApplicationContext(), "DISCOVER PEERS FAIL WITH CODE " + reasonCode, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "DISCOVER PEERS FAIL WITH CODE " + reasonCode, Toast.LENGTH_SHORT).show();
             }
         });
 
