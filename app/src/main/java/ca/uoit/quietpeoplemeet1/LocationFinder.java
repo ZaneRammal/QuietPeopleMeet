@@ -75,10 +75,6 @@ public class LocationFinder implements LocationListener {
     public void onLocationChanged(Location location) {
         this.latitude = location.getLatitude();
         this.longitude = location.getLongitude();
-
-        String s = " Lat: " + Double.toString(latitude) + " Long : " + Double.toString(longitude);
-        Toast toast = Toast.makeText(this.context, s, Toast.LENGTH_SHORT);
-        toast.show();
     }
 
 

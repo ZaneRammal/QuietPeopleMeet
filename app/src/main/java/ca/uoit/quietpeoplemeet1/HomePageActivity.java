@@ -188,6 +188,10 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
                 //
                 //
                 break;
+            case R.id.nav_logan:
+                intent = new Intent(HomePageActivity.this, MyWiFiActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                HomePageActivity.this.startActivity(intent);
             default:
                 fragment = startFragment;
                 break;

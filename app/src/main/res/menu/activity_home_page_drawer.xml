@@ -31,6 +31,11 @@
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/drawer_map" />
+        <item
+            android:id="@+id/nav_logan"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="P2P tester" />
+
     </group>
 
     <item android:title="@string/drawer_group_name">
