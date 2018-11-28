@@ -5,31 +5,38 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
+import android.net.wifi.p2p.*;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 
+
 public class SetupP2p {
 
+
+    public WifiP2pManager wpm;
+    WifiP2pManager.Channel channel;
 
     final String TAG = "setupP2P";
 
 
     NsdManager mNsdManager;
 
-    public SetupP2p() {
-        NsdServiceInfo serviceInfo = new NsdServiceInfo();
+    public SetupP2p(Context c) {
 
-        // tag of which is used for others on the network to recognize the program by
-        serviceInfo.setServiceName("QuietPeopleMeet");
+        wpm = (WifiP2pManager) c.getSystemService(Context.WIFI_P2P_SERVICE);
 
-        // uses http protocol using tcp sockets
-        serviceInfo.setServiceType("_http._tcp.");
+        this.channel = wpm.initialize(c,Looper.getMainLooper(),null);
 
-        // arbitrary port number
-        serviceInfo.setPort(50210);
+        //WifiDirectBroadcastReceiver receiver = new WifiDirectBroadcastReceiver(wpm,channel,c);
+
 
     }
+
+
+
+
 
 }

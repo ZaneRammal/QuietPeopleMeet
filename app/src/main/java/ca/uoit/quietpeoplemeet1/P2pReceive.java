@@ -4,46 +4,87 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
+import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.util.Log;
+
+
+
 
 public class P2pReceive extends BroadcastReceiver {
 
+    private static final String TAG = "P2pReceive";
 
     private WifiP2pManager manager;
-    private WifiP2pManager.Channel channel;
-    private P2PActivity activity;
+    private Channel channel;
+    private Activity activity;
 
-    public P2pReceive(WifiP2pManager manager, WifiP2pManager.Channel channel, P2PActivity activity) {
-
+    /**
+     * @param manager  WifiP2pManager system service
+     * @param channel  Wifi p2p channel
+     * @param activity activity associated with the receiver
+     */
+    public P2pReceive(WifiP2pManager manager, Channel channel,
+                             Activity activity) {
+        super();
         this.manager = manager;
         this.channel = channel;
         this.activity = activity;
-
-
     }
 
-
+    /*
+     * (non-Javadoc)
+     * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
+     * android.content.Intent)
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
+        String action = intent.getAction();
+        Log.d(TAG, action);
+        if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
 
-        if (intent.getExtras() != null) {
+            if (manager == null) {
+                return;
+            }
 
-            //  Default values are used to indicate when something has gone wrong, because the values are unlikely if not impossible
-            double latitude = intent.getDoubleExtra("latitude", 0);
-            double longitude = intent.getDoubleExtra("longitude", 0);
-            int soundLevel = intent.getIntExtra("soundLevel", -1);
+            NetworkInfo networkInfo = (NetworkInfo) intent
+                    .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 
+            if (networkInfo.isConnected()) {
 
-
-        } else {
-            System.out.println("Empty intent given to broadcast receiver");
+                // we are connected with the other device, request connection
+                // info to find group owner IP
+                Log.d(TAG,
+                        "Connected to p2p network. Requesting network details");
+                manager.requestConnectionInfo(channel,
+                        (ConnectionInfoListener) activity);
+            } else {
+                // It's a disconnect
+            }
         }
+//        else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
+//
+//            // request available peers from the wifi p2p manager. This is an
+//            // asynchronous call and the calling activity is notified with a
+//            // callback on PeerListListener.onPeersAvailable()
+//            if (manager != null) {
+//                manager.requestPeers(channel, (WifiP2pManager.PeerListListener) activity);
+//            }
+//            Log.d(TAG, "P2P peers changed");
+//        }
+        else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION
+                .equals(action)) {
 
+            WifiP2pDevice device = (WifiP2pDevice) intent
+                    .getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE);
+            Log.d(TAG, "Device status -" + device.status);
+            manager.requestConnectionInfo(channel,
+                    (ConnectionInfoListener) activity);
 
+        }
     }
-
 
 }
