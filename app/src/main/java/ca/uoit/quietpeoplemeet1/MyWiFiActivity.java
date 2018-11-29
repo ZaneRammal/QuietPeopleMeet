@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.net.nsd.NsdManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -165,8 +166,10 @@ public class MyWiFiActivity extends AppCompatActivity {
                      *
                      */
 
-                    new SoundNodeSend(getCurrentSoundNode(), device);
 
+
+
+                        new NetworkDiscovery(getApplicationContext(),(NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE));
 
                 }
                 peerView.setText(allPeers);
@@ -174,6 +177,9 @@ public class MyWiFiActivity extends AppCompatActivity {
         });
     }
 
+    public void attemptSend(View v){
+        new SoundNodeSend();
+    }
 
     //button reaction to discover peers
     public void discoverPeers(View v) {
@@ -222,6 +228,8 @@ public class MyWiFiActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
 }
