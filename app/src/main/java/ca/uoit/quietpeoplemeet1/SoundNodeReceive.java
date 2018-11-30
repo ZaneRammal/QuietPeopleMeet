@@ -18,6 +18,8 @@ public class SoundNodeReceive extends AsyncTask<Void, Void, SoundNode> {
 
     protected SoundNode doInBackground(Void... params) {
 
+        NetworkInfo.ServerSocketInUse = true;
+
         SoundNode soundNodeReturn = null;
 
         Log.d(TAG, "Starting SoundNodeReceive Listener");
@@ -64,13 +66,10 @@ public class SoundNodeReceive extends AsyncTask<Void, Void, SoundNode> {
     }
 
     protected void onPostExecute(SoundNode soundNode) {
-
-        if (soundNode != null) {
-            NetworkInfo.soundNodes.add(soundNode);
-        }
-
+        
         Log.d(TAG, "Ending Receiver!");
 
+        NetworkInfo.ServerSocketInUse = false;
     }
 
 

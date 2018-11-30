@@ -3,34 +3,19 @@ package ca.uoit.quietpeoplemeet1;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.location.Location;
 import android.net.nsd.NsdManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 
 public class MyWiFiActivity extends AppCompatActivity {
 
@@ -68,7 +53,27 @@ public class MyWiFiActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.d(TAG, "Failed to start sound recording");
         }
-        new SoundNodeReceive().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        NetworkInfo.ServerSocketInUse = false;
+
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                while (true) {
+
+                    if (NetworkInfo.ServerSocketInUse == false) {
+                        NetworkInfo.ServerSocketInUse = true;
+                        Log.d("ServerSocket thread", "Starting server Socket");
+                        new SoundNodeReceive().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
 
 
         peerView = (TextView) findViewById(R.id.peerView);
@@ -134,19 +139,21 @@ public class MyWiFiActivity extends AppCompatActivity {
         latitude = locationFinder.getLatitude();
         longitude = locationFinder.getLongitude();
 
-        Log.d(TAG,"Sound Node : Latitude " + latitude + ", Longitude : " + longitude);
+        Log.d(TAG, "Sound Node : Latitude " + latitude + ", Longitude : " + longitude);
 
 
         double currentSoundLevel = 0;
         try {
 
             double max = currentSoundLevel;
-            for (int i = 0;i<10000;i++) {
+            for (int i = 0; i < 1000; i++) {
                 currentSoundLevel = soundReader.getAmplitude();
-                if( currentSoundLevel > max){max = currentSoundLevel;}
+                if (currentSoundLevel > max) {
+                    max = currentSoundLevel;
+                }
             }
             currentSoundLevel = max;
-            Log.d(TAG,"SoundLevelCaptured to node: " + soundReader.getAmplitude() +
+            Log.d(TAG, "SoundLevelCaptured to node: " + soundReader.getAmplitude() +
                     " current Sound level is : " + currentSoundLevel);
 
 
@@ -173,23 +180,7 @@ public class MyWiFiActivity extends AppCompatActivity {
                     allPeers = allPeers.concat(" | ");
 
 
-
-                    /**
-                     * OK here's my idea:
-                     * for each peer start a thread attempting to connect and send the info needed
-                     *
-                     * create a listener that starts on a thread (AsyncTask?) that awaits incoming connections from a set port
-                     * that listener will be ready to receive the location and sound data and then package in a SoundNode object
-                     * the sound node will then be sent to a global List where the map activity will read it and post the found sound nodes
-                     *
-                     * hoping to give a timestamp to the sound nodes so the global list can get rid of old soundNodes
-                     *
-                     */
-
-
-
-
-                        new NetworkDiscovery(getApplicationContext(),(NsdManager)getApplicationContext().getSystemService(Context.NSD_SERVICE));
+                    new NetworkDiscovery(getApplicationContext(), (NsdManager) getApplicationContext().getSystemService(Context.NSD_SERVICE));
 
                 }
                 peerView.setText(allPeers);
@@ -197,7 +188,7 @@ public class MyWiFiActivity extends AppCompatActivity {
         });
     }
 
-    public void attemptSend(View v){
+    public void attemptSend(View v) {
         new SoundNodeSend(getCurrentSoundNode());
     }
 
@@ -248,8 +239,6 @@ public class MyWiFiActivity extends AppCompatActivity {
 
 
     }
-
-
 
 
 }

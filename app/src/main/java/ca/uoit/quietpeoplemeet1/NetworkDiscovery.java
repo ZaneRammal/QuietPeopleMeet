@@ -5,6 +5,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.content.pm.ServiceInfo;
 import android.net.nsd.NsdManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -158,7 +159,6 @@ public class NetworkDiscovery {
                 int port = serviceInfo.getPort();
                 InetAddress host = serviceInfo.getHost();
 
-                NetworkInfo.peerAddresses.add(host);
             }
         };
     }
@@ -173,6 +173,7 @@ public class NetworkDiscovery {
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
             Log.d(TAG, "Adding address : " + serviceInfo.getHost());
             NetworkInfo.peerAddresses.add(serviceInfo.getHost());
+            Toast.makeText(context, "Peer Address Found!", Toast.LENGTH_SHORT).show();
         }
     }
 }
