@@ -39,6 +39,9 @@ public class MyWiFiActivity extends AppCompatActivity {
     WifiP2pManager.Channel mChannel;
     BroadcastReceiver mReceiver;
     String allPeers;
+    LocationFinder locationFinder;
+    SoundReader soundReader;
+
 
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
 
@@ -57,6 +60,14 @@ public class MyWiFiActivity extends AppCompatActivity {
         allPeers = "Peers: ";
         //check permissions
 
+        this.locationFinder = new LocationFinder(this);
+        this.soundReader = new SoundReader();
+        try {
+            soundReader.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG, "Failed to start sound recording");
+        }
         new SoundNodeReceive().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
@@ -118,27 +129,24 @@ public class MyWiFiActivity extends AppCompatActivity {
 
     public SoundNode getCurrentSoundNode() {
 
-        LocationFinder locationFinder = new LocationFinder(this);
+
         double longitude, latitude;
         latitude = locationFinder.getLatitude();
         longitude = locationFinder.getLongitude();
 
         Log.d(TAG,"Sound Node : Latitude " + latitude + ", Longitude : " + longitude);
-        SoundReader s = new SoundReader();
+
 
         double currentSoundLevel = 0;
         try {
-            s.start();
 
-            //busyWait until a sound value is given
-            while (s.getAmplitude() == -1) ;
-            currentSoundLevel = s.getAmplitude();
-            Log.d(TAG,"SoundLevelCaptured to node: " + s.getAmplitude() +
+            currentSoundLevel = soundReader.getAmplitude();
+            Log.d(TAG,"SoundLevelCaptured to node: " + soundReader.getAmplitude() +
                     " current Sound level is : " + currentSoundLevel);
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
 
 
