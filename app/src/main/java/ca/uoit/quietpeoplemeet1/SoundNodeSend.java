@@ -42,6 +42,7 @@ public class SoundNodeSend {
                 try {
                     Socket socket = new Socket();
                     socket.bind(null);
+                    socket.setSoTimeout(5000);
                     socket.connect(new InetSocketAddress(address, NetworkInfo.SERVER_PORT_NUMBER));
 
                     Log.d(TAG, "Connected to " + address);

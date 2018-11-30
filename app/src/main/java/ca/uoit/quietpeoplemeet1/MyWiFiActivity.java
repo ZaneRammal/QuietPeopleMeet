@@ -56,6 +56,9 @@ public class MyWiFiActivity extends AppCompatActivity {
         allPeers = "Peers: ";
         //check permissions
 
+        new SoundNodeReceive().execute();
+
+
         peerView = (TextView) findViewById(R.id.peerView);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
@@ -71,7 +74,6 @@ public class MyWiFiActivity extends AppCompatActivity {
 
 
         //allow listener for ONE incoming node
-        new SoundNodeReceive();
 
     }
 

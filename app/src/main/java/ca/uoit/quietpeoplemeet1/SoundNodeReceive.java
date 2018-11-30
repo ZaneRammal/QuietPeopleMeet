@@ -34,22 +34,22 @@ public class SoundNodeReceive extends AsyncTask<Void,Void,SoundNode> {
              * call blocks until a connection is accepted from a client
              */
             ServerSocket serverSocket = new ServerSocket(NetworkInfo.SERVER_PORT_NUMBER);
-            Socket client = serverSocket.accept();
+                Socket client = serverSocket.accept();
 
-            //if this has been reached the client has accepted
+                //if this has been reached the client has accepted
 
-            InputStream inputstream = client.getInputStream();
-
-
-            byte[] buffer = new byte[24];
-
-            //assume receiving a sound node object and read and cast
-            inputstream.read(buffer,0,buffer.length);
-            
-            soundNodeReturn = (SoundNode) deserialize(buffer);
+                InputStream inputstream = client.getInputStream();
 
 
-            serverSocket.close();
+                byte[] buffer = new byte[24];
+
+                //assume receiving a sound node object and read and cast
+                inputstream.read(buffer, 0, buffer.length);
+
+                soundNodeReturn = (SoundNode) deserialize(buffer);
+
+
+                serverSocket.close();
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
             return null;
@@ -68,6 +68,9 @@ public class SoundNodeReceive extends AsyncTask<Void,Void,SoundNode> {
         if(soundNode != null){
             NetworkInfo.soundNodes.add(soundNode);
         }
+
+        Log.d(TAG,"Ending Receiver!");
+        this.execute();
 
     }
 
