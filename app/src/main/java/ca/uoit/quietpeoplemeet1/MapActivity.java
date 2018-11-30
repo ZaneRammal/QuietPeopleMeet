@@ -1,9 +1,5 @@
 package ca.uoit.quietpeoplemeet1;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -22,11 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.*;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -77,6 +70,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
+        }
+
+
+        SoundNode s;
+        if (NetworkInfo.soundNodes != null) {
+            for (int i = 0; i < NetworkInfo.soundNodes.size(); i++) {
+                s = NetworkInfo.soundNodes.get(i);
+                mMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(s.getLatitude(), s.getLongitude()))
+                        .title(Double.toString(s.getSoundLevel())));
+            }
         }
     }
 
