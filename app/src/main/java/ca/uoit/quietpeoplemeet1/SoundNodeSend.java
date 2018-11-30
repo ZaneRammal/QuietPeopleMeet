@@ -72,6 +72,7 @@ public class SoundNodeSend {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(out);
         os.writeObject(obj);
+        Log.d(TAG,"Byte array size is :" + out.toByteArray().length );
         return out.toByteArray();
     }
 

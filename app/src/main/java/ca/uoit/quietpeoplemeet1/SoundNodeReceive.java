@@ -37,7 +37,7 @@ public class SoundNodeReceive extends AsyncTask<Void, Void, SoundNode> {
 
             InputStream inputstream = client.getInputStream();
 
-            byte[] buffer = new byte[24];
+            byte[] buffer = new byte[115];
 
             //assume receiving a sound node object and read and cast
             inputstream.read(buffer, 0, buffer.length);

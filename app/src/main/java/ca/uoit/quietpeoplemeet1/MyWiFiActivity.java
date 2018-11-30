@@ -122,6 +122,8 @@ public class MyWiFiActivity extends AppCompatActivity {
         double longitude, latitude;
         latitude = locationFinder.getLatitude();
         longitude = locationFinder.getLongitude();
+
+        Log.d(TAG,"Sound Node : Latitude " + latitude + ", Longitude : " + longitude);
         SoundReader s = new SoundReader();
 
         double currentSoundLevel = 0;
@@ -131,6 +133,8 @@ public class MyWiFiActivity extends AppCompatActivity {
             //busyWait until a sound value is given
             while (s.getAmplitude() == -1) ;
             currentSoundLevel = s.getAmplitude();
+            Log.d(TAG,"SoundLevelCaptured to node: " + s.getAmplitude() +
+                    " current Sound level is : " + currentSoundLevel);
 
 
         } catch (Exception e) {
