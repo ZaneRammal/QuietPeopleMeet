@@ -50,6 +50,7 @@ public class SoundNodeSend {
                     outputStream.write(serialize(soundNode));
 
                     outputStream.close();
+                    Log.d(TAG, "Closed Stream to send to" + address);
 
                 } catch (Exception e) {
                     Log.d(TAG, "Could not send to " + address);
@@ -61,18 +62,9 @@ public class SoundNodeSend {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            Log.d(TAG, "in AsyncSend");
-
-
-        }
-
-        @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            Log.d(TAG, "postExecuteSend");
         }
     }
 

@@ -1,6 +1,8 @@
 package ca.uoit.quietpeoplemeet1;
 
-public class SoundNode {
+import java.io.Serializable;
+
+public class SoundNode implements Serializable {
 
     private double latitude, longitude , soundLevel;
 

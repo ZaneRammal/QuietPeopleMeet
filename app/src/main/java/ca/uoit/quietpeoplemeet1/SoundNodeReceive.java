@@ -4,27 +4,23 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-//TODO : Make multiThreaded to keep accepting clients
 
-public class SoundNodeReceive extends AsyncTask<Void,Void,SoundNode> {
+public class SoundNodeReceive extends AsyncTask<Void, Void, SoundNode> {
 
     private final String TAG = "SoundNodeReceive";
 
 
-
-
-    protected SoundNode doInBackground(Void... params){
+    protected SoundNode doInBackground(Void... params) {
 
         SoundNode soundNodeReturn = null;
 
-        Log.d(TAG,"Starting SoundNodeReceive Listener");
+        Log.d(TAG, "Starting SoundNodeReceive Listener");
 
 
         try {
@@ -34,47 +30,48 @@ public class SoundNodeReceive extends AsyncTask<Void,Void,SoundNode> {
              * call blocks until a connection is accepted from a client
              */
             ServerSocket serverSocket = new ServerSocket(NetworkInfo.SERVER_PORT_NUMBER);
-                Socket client = serverSocket.accept();
-                Log.d(TAG,"Accepted Client " + client.getInetAddress());
+            Socket client = serverSocket.accept();
+            Log.d(TAG, "Accepted Client " + client.getInetAddress());
 
-                //if this has been reached the client has accepted
+            //if this has been reached the client has accepted
 
-                InputStream inputstream = client.getInputStream();
+            InputStream inputstream = client.getInputStream();
+
+            byte[] buffer = new byte[24];
+
+            //assume receiving a sound node object and read and cast
+            inputstream.read(buffer, 0, buffer.length);
+
+            soundNodeReturn = (SoundNode) deserialize(buffer);
 
 
-                byte[] buffer = new byte[24];
+            serverSocket.close();
 
-                //assume receiving a sound node object and read and cast
-                inputstream.read(buffer, 0, buffer.length);
+            Log.d(TAG, "Adding sound level " + soundNodeReturn.getSoundLevel()
+                    + " Lat " + soundNodeReturn.getLatitude() + " long " + soundNodeReturn.getLongitude());
 
-                soundNodeReturn = (SoundNode) deserialize(buffer);
-
-
-                serverSocket.close();
+            NetworkInfo.soundNodes.add(soundNodeReturn);
         } catch (IOException e) {
-            Log.e(TAG, e.getMessage());
-            return null;
-        } catch (Exception e){
+            Log.e(TAG, "IOEXCEPTION : " + e.getStackTrace());
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            Log.e(TAG, "Class Exception : " + e.getMessage());
         }
-
 
 
         return soundNodeReturn;
 
     }
 
-    protected void onPostExecute(SoundNode soundNode){
+    protected void onPostExecute(SoundNode soundNode) {
 
-        if(soundNode != null){
+        if (soundNode != null) {
             NetworkInfo.soundNodes.add(soundNode);
         }
 
-        Log.d(TAG,"Ending Receiver!");
-        this.execute();
+        Log.d(TAG, "Ending Receiver!");
 
     }
-
 
 
     public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
