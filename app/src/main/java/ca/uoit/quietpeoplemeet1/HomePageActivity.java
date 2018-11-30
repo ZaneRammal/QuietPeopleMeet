@@ -125,7 +125,16 @@ public class HomePageActivity extends AppCompatActivity implements RecordFragmen
 
     // TODO
 
+    /* Launch chat activity*/
+    public void onButtonClick7(View v) {
+        startFragment.onButtonClick7(v);
 
+//        Intent intent;
+//        intent = new Intent(HomePageActivity.this, ChatActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        HomePageActivity.this.startActivity(intent);
+
+    }
     // -------------------------------
 
     /**

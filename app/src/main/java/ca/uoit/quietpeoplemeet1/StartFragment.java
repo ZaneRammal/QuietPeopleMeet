@@ -1,12 +1,14 @@
 package ca.uoit.quietpeoplemeet1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 /**
@@ -26,6 +28,7 @@ public class StartFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    public String boxText;
 
     private OnFragmentInteractionListener mListener;
 
@@ -46,8 +49,8 @@ public class StartFragment extends Fragment {
         StartFragment fragment = new StartFragment();
         Bundle args = new Bundle();
 
-       // args.putString(ARG_PARAM1, param1);
-       // args.putString(ARG_PARAM2, param2);
+        // args.putString(ARG_PARAM1, param1);
+        // args.putString(ARG_PARAM2, param2);
 
         fragment.setArguments(args);
         return fragment;
@@ -106,5 +109,16 @@ public class StartFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void onButtonClick7(View v) {
+
+        EditText et = (EditText) getView().findViewById(R.id.chatText);
+        boxText = et.getText().toString();
+
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra("Chat", boxText);
+        startActivity(intent);
+
     }
 }
