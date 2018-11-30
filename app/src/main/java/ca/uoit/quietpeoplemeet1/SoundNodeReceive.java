@@ -35,6 +35,7 @@ public class SoundNodeReceive extends AsyncTask<Void,Void,SoundNode> {
              */
             ServerSocket serverSocket = new ServerSocket(NetworkInfo.SERVER_PORT_NUMBER);
                 Socket client = serverSocket.accept();
+                Log.d(TAG,"Accepted Client " + client.getInetAddress());
 
                 //if this has been reached the client has accepted
 

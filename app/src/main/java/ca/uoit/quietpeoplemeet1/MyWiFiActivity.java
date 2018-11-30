@@ -9,6 +9,7 @@ import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,7 +57,7 @@ public class MyWiFiActivity extends AppCompatActivity {
         allPeers = "Peers: ";
         //check permissions
 
-        new SoundNodeReceive().execute();
+        new SoundNodeReceive().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 
         peerView = (TextView) findViewById(R.id.peerView);
@@ -180,7 +181,7 @@ public class MyWiFiActivity extends AppCompatActivity {
     }
 
     public void attemptSend(View v){
-        new SoundNodeSend();
+        new SoundNodeSend(getCurrentSoundNode());
     }
 
     //button reaction to discover peers

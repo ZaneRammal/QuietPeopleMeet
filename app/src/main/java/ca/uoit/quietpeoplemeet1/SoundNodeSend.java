@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.List;
 
 public class SoundNodeSend {
 
@@ -19,30 +20,28 @@ public class SoundNodeSend {
     public SoundNode soundNode;
     //public InetAddress inetAddress;
 
-    public SoundNodeSend() {
-        Log.d(TAG, "Attempting to connect to list of addresses");
+    public SoundNodeSend(SoundNode soundNode) {
 
-        //this.soundNode = soundNode;
+
+        this.soundNode = soundNode;
         //this.inetAddress = inetAddress;
 
 
-        AsyncSend asyncSend = new AsyncSend();
-        asyncSend.execute();
+        Log.d(TAG, "Entered SoundNodeSend");
+        new AsyncSend().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
-    private class AsyncSend extends AsyncTask<InetAddress, Void, Void> {
+    private class AsyncSend extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Void doInBackground(InetAddress... inetAddresses) {
+        protected Void doInBackground(Void... params) {
 
             for (InetAddress address : NetworkInfo.peerAddresses) {
-
+                Log.d(TAG, "Attempting to connect to" + address);
 
                 try {
                     Socket socket = new Socket();
-                    socket.bind(null);
-                    socket.setSoTimeout(5000);
                     socket.connect(new InetSocketAddress(address, NetworkInfo.SERVER_PORT_NUMBER));
 
                     Log.d(TAG, "Connected to " + address);
@@ -62,9 +61,18 @@ public class SoundNodeSend {
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            Log.d(TAG, "in AsyncSend");
+
+
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
+            Log.d(TAG, "postExecuteSend");
         }
     }
 
