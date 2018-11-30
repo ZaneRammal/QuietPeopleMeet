@@ -140,7 +140,12 @@ public class MyWiFiActivity extends AppCompatActivity {
         double currentSoundLevel = 0;
         try {
 
-            currentSoundLevel = soundReader.getAmplitude();
+            double max = currentSoundLevel;
+            for (int i = 0;i<10000;i++) {
+                currentSoundLevel = soundReader.getAmplitude();
+                if( currentSoundLevel > max){max = currentSoundLevel;}
+            }
+            currentSoundLevel = max;
             Log.d(TAG,"SoundLevelCaptured to node: " + soundReader.getAmplitude() +
                     " current Sound level is : " + currentSoundLevel);
 
