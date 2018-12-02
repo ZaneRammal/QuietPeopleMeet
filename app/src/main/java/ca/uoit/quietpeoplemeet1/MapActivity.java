@@ -33,6 +33,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to handle all map activity operations
+ */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private static final String TAG = "MapActivity";
@@ -54,17 +57,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Log.d(TAG, "onMapReady: Map is ready");
         mMap = googleMap;
 
+        // Permission handling
         if (mLocationPermissionGranted) {
             getDeviceLocation();
 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
                 return;
             }
             mMap.setMyLocationEnabled(true);
@@ -73,6 +70,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
 
 
+        // Take all sound nodes and put a marker on the map at their location
         SoundNode s;
         if (NetworkInfo.soundNodes != null) {
             for (int i = 0; i < NetworkInfo.soundNodes.size(); i++) {
@@ -99,6 +97,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
+    /**
+     * initialize map components to set it to the users current location
+     */
     private void init() {
         Log.d(TAG, "init: initializing");
 
@@ -116,6 +117,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
     }
 
+    /**
+     * Find current location and move camera to it
+     */
     private void geoLocate() {
         Log.d(TAG, "geoLocate: locating");
 
@@ -135,6 +139,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * get the current location
+     */
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting current location");
 
@@ -171,6 +178,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * @param latLng latitude and longitude to move camera to
+     * @param zoom   degree of which camera is zoomed in
+     * @param title  title of marger
+     *               <p>
+     *               move camera to a given coordinate
+     */
     private void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moveCamera: moving camera to: lat:" + latLng.latitude + ", lng:" + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
@@ -181,12 +195,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.addMarker(options);
     }
 
+    /**
+     * setup map background activities
+     */
     private void initMap() {
         Log.d(TAG, "initMap: initialize map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapActivity.this);
     }
 
+    /**
+     * request permissions for location from user
+     */
     private void getLocaionPermission() {
         Log.d(TAG, "getLocaionPermission: get location permission");
         String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -210,6 +230,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     *
+     * @param requestCode permission request code
+     * @param permissions string array of permissions requested
+     * @param grantResults array of results from permission requests
+     *
+     * set actions after a permission is allowed or denied
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.d(TAG, "onRequestPermissionsResult: permission called");

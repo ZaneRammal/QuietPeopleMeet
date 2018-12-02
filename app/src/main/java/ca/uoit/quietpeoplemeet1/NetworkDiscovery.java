@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 
+/**
+ * used to find network services
+ */
 public class NetworkDiscovery {
 
     ServerSocket mServerSocket;
@@ -83,7 +86,7 @@ public class NetworkDiscovery {
 
         // The name is subject to change based on conflicts
         // with other services advertised on the same network.
-        serviceInfo.setServiceName("NsdChat");
+        serviceInfo.setServiceName(NetworkInfo.serviceName);
         serviceInfo.setServiceType("_http._tcp.");
         serviceInfo.setPort(port);
 

@@ -17,35 +17,48 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * This class handles all activity requests related to sending and receiving sound node data
+ */
 public class MyWiFiActivity extends AppCompatActivity {
 
+    //intent filter required by WifiP2p
     IntentFilter mIntentFilter;
+
+    //Wifi p2p components of manager and channel to handle info
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
+
+    //listens for broadcasts
     BroadcastReceiver mReceiver;
     String allPeers;
     LocationFinder locationFinder;
     SoundReader soundReader;
 
-
-    public static String EXTRA_DEVICE_ADDRESS = "device_address";
-
-    //WifiP2pManager.PeerListListener myPeerListListener;
-
+    //text views that hold peers detected
     TextView peerView;
     TextView btView;
+
+    //button intended to initiate bluetooth communication
     Button blueToothButton;
 
+    // debugging tag
     public static final String TAG = "DEVICE_FINDER_ACTIVITY";
 
+    /**
+     * @param savedInstanceState android default saved state
+     *                           <p>
+     *                           setup UI elements and start essential operations for the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wifi);
         allPeers = "Peers: ";
-        //check permissions
 
+        //start location finder
         this.locationFinder = new LocationFinder(this);
+        // start sound reader
         this.soundReader = new SoundReader();
         try {
             soundReader.start();
@@ -53,9 +66,10 @@ public class MyWiFiActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.d(TAG, "Failed to start sound recording");
         }
+
+
+        //start thread that indefinitely resets the server socket to receive messages
         NetworkInfo.ServerSocketInUse = false;
-
-
         new Thread(new Runnable() {
             public void run() {
 
@@ -88,28 +102,31 @@ public class MyWiFiActivity extends AppCompatActivity {
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
         mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-
-
-        //allow listener for ONE incoming node
-
     }
 
 
-    /* register the broadcast receiver with the intent values to be matched */
+    /**
+     * register the broadcast receiver with the intent values to be matched
+     */
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(mReceiver, mIntentFilter);
     }
 
-    /* unregister the broadcast receiver */
+    /**
+     * unregister the broadcast receiver
+     */
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mReceiver);
     }
 
-
+    /**
+     * @param d device to connect to
+     *          used to connect to a device via wifiDirect
+     */
     public void connectToPeer(WifiP2pDevice d) {
 
         final WifiP2pDevice device = d;
@@ -132,9 +149,15 @@ public class MyWiFiActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * @return return sound node object
+     * <p>
+     * used to get the current location and sound info
+     */
     public SoundNode getCurrentSoundNode() {
 
 
+        //get location data
         double longitude, latitude;
         latitude = locationFinder.getLatitude();
         longitude = locationFinder.getLongitude();
@@ -142,6 +165,7 @@ public class MyWiFiActivity extends AppCompatActivity {
         Log.d(TAG, "Sound Node : Latitude " + latitude + ", Longitude : " + longitude);
 
 
+        //get sound data
         double currentSoundLevel = 0;
         try {
 
@@ -161,11 +185,15 @@ public class MyWiFiActivity extends AppCompatActivity {
             Log.e(TAG, e.getMessage());
         }
 
-
+        //package data into SoundNode object and return
         return new SoundNode(latitude, longitude, currentSoundLevel);
     }
 
 
+    /**
+     * button response used to detect peers on network
+     * @param v button view pressed to initiate method
+     */
     public void requestPeers(View v) {
         mManager.requestPeers(mChannel, new WifiP2pManager.PeerListListener() {
             @Override
@@ -188,11 +216,18 @@ public class MyWiFiActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Button response to send sound node data to all discovered IP addresses
+     * @param v button view pressed to initiate method
+     */
     public void attemptSend(View v) {
         new SoundNodeSend(getCurrentSoundNode());
     }
 
-    //button reaction to discover peers
+    /**
+     * Button response to discover peers on network
+     * @param v button view pressed to initiate method
+     */
     public void discoverPeers(View v) {
 
         mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
@@ -210,6 +245,10 @@ public class MyWiFiActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * update text view to show contents of current soundNode objects found
+     * @param v button view pressed to initiate method
+     */
     public void updateNodeList(View v) {
 
         TextView tv = findViewById(R.id.NodeListTextView);

@@ -10,12 +10,20 @@ import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-
+/**
+ * this class handles receiving socket connections to specifically receive SoundNode objects
+ */
 public class SoundNodeReceive extends AsyncTask<Void, Void, SoundNode> {
 
+    //debug tag
     private final String TAG = "SoundNodeReceive";
 
-
+    /**
+     * asynchronously handle receiving a socket connection and data transfer
+     *
+     * @param params nothing
+     * @return return sound node object
+     */
     protected SoundNode doInBackground(Void... params) {
 
         NetworkInfo.ServerSocketInUse = true;
@@ -65,6 +73,10 @@ public class SoundNodeReceive extends AsyncTask<Void, Void, SoundNode> {
 
     }
 
+    /**
+     * sets boolean to say that server socket is no longer in use
+     * @param soundNode unused in this case
+     */
     protected void onPostExecute(SoundNode soundNode) {
         
         Log.d(TAG, "Ending Receiver!");
@@ -72,7 +84,13 @@ public class SoundNodeReceive extends AsyncTask<Void, Void, SoundNode> {
         NetworkInfo.ServerSocketInUse = false;
     }
 
-
+    /**
+     * converts a byte array into a usable object
+     * @param data byte array of data to be converted into an object
+     * @return returns deserialized object
+     * @throws IOException for reading streams
+     * @throws ClassNotFoundException if object not found
+     */
     public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);

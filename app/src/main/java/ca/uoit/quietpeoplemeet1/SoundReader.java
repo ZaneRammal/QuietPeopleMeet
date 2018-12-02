@@ -2,11 +2,20 @@ package ca.uoit.quietpeoplemeet1;
 
 import android.media.MediaRecorder;
 
+/**
+ * this class handles all microphone interactions to get sound data
+ */
 public class SoundReader {
 
+    // boolean to indicate if microphone is running
     public boolean isRunning = false;
+    //media player class used to interface with phone's microphone
     private MediaRecorder mic = null;
 
+    /**
+     * start mic recording, sets destination to /dev/null so it doesnt take up storage space
+     * @throws Exception throws various exceptions if microphone doesnt work properly
+     */
     public void start() throws Exception{
         if (mic == null) {
 
@@ -22,8 +31,10 @@ public class SoundReader {
         }
     }
 
-    //stop the recording and release the resource
 
+    /**
+     * stop microphone recording
+     */
     public void stop() {
         if (mic != null) {
             mic.stop();
@@ -33,8 +44,10 @@ public class SoundReader {
         }
     }
 
-    //get sound wave amplitude at any given time
-
+    /**
+     * get amplitude of mic sound data
+     * @return returns 16 bit double to represent volume data
+     */
     public double getAmplitude() {
         if (mic != null)
             return  mic.getMaxAmplitude();

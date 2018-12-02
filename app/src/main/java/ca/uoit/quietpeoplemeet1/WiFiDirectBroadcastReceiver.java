@@ -4,10 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.p2p.WifiP2pManager;
-import android.net.wifi.p2p.nsd.WifiP2pServiceInfo;
 import android.widget.Toast;
 
-
+/**
+ * this class listens for peers on the network and via wifi direct
+ * many mandatory methods that are left not utilized due to our implementation that instead uses NSD
+ */
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
     public WifiP2pManager.PeerListListener myPeerListListener;
@@ -23,32 +25,25 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
         this.mChannel = channel;
         this.mActivity = activity;
 
-
-        //manager.addLocalService(channel,);
-
-
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        //check action received
         String action = intent.getAction();
 
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
-
-
-
-
-
             // Check to see if Wi-Fi is enabled and notify appropriate activity
         } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
             // Call WifiP2pManager.requestPeers() to get a list of current peers
         } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
             // Respond to new connection or disconnections
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
-            // Respond to this device's wifi state changing
-            Toast.makeText(context, "Wifi State Change Detected",Toast.LENGTH_SHORT).show();
+            // inform user of wifi state change via popup
+            Toast.makeText(context, "Wifi State Change Detected", Toast.LENGTH_SHORT).show();
         }
 
+        //detects state change
         if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
             int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
             if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
@@ -57,10 +52,6 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
                 // Wi-Fi P2P is not enabled
             }
 
-
-            // request available peers from the wifi p2p manager. This is an
-            // asynchronous call and the calling activity is notified with a
-            // callback on PeerListListener.onPeersAvailable()
             if (mManager != null) {
                 mManager.requestPeers(mChannel, myPeerListListener);
             }
